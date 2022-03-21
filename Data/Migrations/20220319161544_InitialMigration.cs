@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace DartTime.Data.Migrations
+namespace DartTimeAPI.Data.Migrations
 {
     public partial class InitialMigration : Migration
     {

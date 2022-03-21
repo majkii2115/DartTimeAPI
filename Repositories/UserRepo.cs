@@ -1,22 +1,46 @@
-using DartTime.DTOs;
-using DartTime.Models;
-using DartTime.Repositories.Interfaces;
+using AutoMapper;
+using DartTimeAPI.Data;
+using DartTimeAPI.DTOs;
+using DartTimeAPI.Models;
+using DartTimeAPI.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
-namespace DartTime.Repositories;
+namespace DartTimeAPI.Repositories;
 public class UserRepo : IUserRepo
 {
-    public Task<UserDTO> CreateUser(User user)
+    #region Variables
+    public readonly DataContext _context;
+    public readonly IMapper _mapper;
+    #endregion
+
+    #region Constructor
+    public UserRepo(DataContext context, IMapper mapper)
+    {
+        _mapper = mapper;
+        _context = context;
+    }
+    #endregion
+
+    #region Methods
+    public async Task<bool> DoesUserExist(string username) 
+    {
+        return await _context.Users.AnyAsync(x => x.Username == username);
+    }
+    public async Task<UserDTO> CreateUser(User user)
+    {
+        await _context.Users.AddAsync(user);
+        await _context.SaveChangesAsync();
+        return _mapper.Map<UserDTO>(user);
+    }
+
+    public async Task<UserDTO> LoginUser(string username, string password)
     {
         return null;
     }
 
-    public Task<UserDTO> LoginUser(string username, string password)
+    public async Task<bool> SaveChangesAsync()
     {
-        return null;
+        return await _context.SaveChangesAsync() > 0;
     }
-
-    public Task<bool> SaveChangesAsync()
-    {
-        return null;
-    }
+    #endregion
 }

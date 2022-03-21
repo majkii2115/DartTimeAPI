@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace DartTime.DTOs.UserAuth;
+namespace DartTimeAPI.DTOs.UserAuth;
 public class RegisterDTO
 {
     [Required]

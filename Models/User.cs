@@ -1,4 +1,4 @@
-namespace DartTime.Models;
+namespace DartTimeAPI.Models;
 public class User
 {
     public int Id { get; set; }

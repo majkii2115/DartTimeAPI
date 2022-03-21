@@ -1,6 +1,7 @@
-using DartTime.Data;
-using DartTime.Repositories;
-using DartTime.Repositories.Interfaces;
+using DartTimeAPI.Data;
+using DartTimeAPI.Repositories;
+using DartTimeAPI.Repositories.Interfaces;
+using DartTimeAPI.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,8 @@ builder.Services.AddDbContext<DataContext>(options => {
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 builder.Services.AddScoped<IUserRepo, UserRepo>();
+builder.Services.AddScoped<ITokenRepo, TokenRepo>();
+builder.Services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
 
 var app = builder.Build();
 

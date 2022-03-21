@@ -1,8 +1,12 @@
-using DartTime.DTOs.UserAuth;
-using DartTime.Repositories.Interfaces;
+using System.Security.Cryptography;
+using System.Text;
+using AutoMapper;
+using DartTimeAPI.DTOs.UserAuth;
+using DartTimeAPI.Models;
+using DartTimeAPI.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DartTime.Controllers;
+namespace DartTimeAPI.Controllers;
 
 [Route("[controller]")]
 public class UserAuthController : ControllerBase
@@ -10,11 +14,15 @@ public class UserAuthController : ControllerBase
     #region Variables
     private readonly ILogger<UserAuthController> _logger;
     private readonly IUserRepo _userRepo;
+    private readonly IMapper _mapper;
+    private readonly ITokenRepo _tokenRepo;
     #endregion
 
     #region Constructor
-    public UserAuthController(ILogger<UserAuthController> logger, IUserRepo userRepo)
+    public UserAuthController(ILogger<UserAuthController> logger, IUserRepo userRepo, IMapper mapper, ITokenRepo tokenRepo)
     {
+        _tokenRepo = tokenRepo;
+        _mapper = mapper;
         _userRepo = userRepo;
         _logger = logger;
     }
@@ -22,11 +30,23 @@ public class UserAuthController : ControllerBase
 
     #region Endpoints
 
-    [HttpPost]
+    [HttpPost("register")]
     public async Task<ActionResult> RegisterUser(RegisterDTO registerDTO) 
     {
-        //create user and save password to DB
-        return null;
+        if(await _userRepo.DoesUserExist(registerDTO.Username.ToLower())) return BadRequest("User already exists.");
+        
+        var user = _mapper.Map<User>(registerDTO);
+        user.Username = user.Username.ToLower();
+
+        using var hmac = new HMACSHA512();
+
+        user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDTO.Password));
+        user.PasswordSalt = hmac.Key;
+
+        var userDTO = await _userRepo.CreateUser(user);
+        userDTO.Token = _tokenRepo.CreateToken(userDTO);
+        if(userDTO != null) return Ok(userDTO);
+        else return BadRequest("Something went wrong. Try again.");
     }
     #endregion
 }

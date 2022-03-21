@@ -1,7 +1,7 @@
-using DartTime.Models;
+using DartTimeAPI.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace DartTime.Data;
+namespace DartTimeAPI.Data;
 public class DataContext : DbContext
 {
     public DataContext(DbContextOptions options) : base(options)
