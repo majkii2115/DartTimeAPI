@@ -31,7 +31,7 @@ public class UserAuthController : ControllerBase
     #region Endpoints
 
     [HttpPost("register")]
-    public async Task<ActionResult> RegisterUser(RegisterDTO registerDTO) 
+    public async Task<ActionResult> RegisterUser([FromBody] RegisterDTO registerDTO) 
     {
         if(await _userRepo.DoesUserExist(registerDTO.Username.ToLower())) return BadRequest("User already exists.");
         
@@ -47,6 +47,18 @@ public class UserAuthController : ControllerBase
         userDTO.Token = _tokenRepo.CreateToken(userDTO);
         if(userDTO != null) return Ok(userDTO);
         else return BadRequest("Something went wrong. Try again.");
+    }
+
+    [HttpPost("login")]
+    public async Task<ActionResult> LoginUser([FromBody] LoginDTO loginDTO)
+    {
+        var user = await _userRepo.LoginUser(loginDTO.Username, loginDTO.Password);
+        
+        if(user == null) return BadRequest("Invalid password or username");
+        
+        user.Token = _tokenRepo.CreateToken(user);
+
+        return Ok(user);
     }
     #endregion
 }

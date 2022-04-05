@@ -1,3 +1,5 @@
+using System.Security.Cryptography;
+using System.Text;
 using AutoMapper;
 using DartTimeAPI.Data;
 using DartTimeAPI.DTOs;
@@ -35,7 +37,24 @@ public class UserRepo : IUserRepo
 
     public async Task<UserDTO> LoginUser(string username, string password)
     {
-        return null;
+        var user = await _context.Users.FirstOrDefaultAsync(x => x.Username == username);
+        if(user != null)
+        {
+            using var hmac = new HMACSHA512(user.PasswordSalt);
+
+            var passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+
+            for(int i = 0; i < passwordHash.Length; i++)
+            {
+                if(passwordHash[i] != user.PasswordHash[i]) return null;
+            }
+        }
+        else 
+        {
+            return null;
+        }
+
+        return _mapper.Map<UserDTO>(user);
     }
 
     public async Task<bool> SaveChangesAsync()
