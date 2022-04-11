@@ -3,6 +3,7 @@ using DartTimeAPI.Repositories;
 using DartTimeAPI.Repositories.Interfaces;
 using DartTimeAPI.Helpers;
 using Microsoft.EntityFrameworkCore;
+using DartTimeAPI.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,7 @@ builder.Services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.UseMiddleware<ExceptionMiddleware>();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
