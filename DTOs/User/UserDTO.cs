@@ -9,5 +9,4 @@ public class UserDTO
     public string Country { get; set; }
     public string City { get; set; }
     public string Email { get; set; }
-    public string Token { get; set; }
 }

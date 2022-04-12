@@ -8,8 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DartTimeAPI.Controllers;
 
-[Route("[controller]")]
-public class UserAuthController : ControllerBase
+public class UserAuthController : BaseApiController
 {
     #region Variables
     private readonly ILogger<UserAuthController> _logger;
@@ -44,8 +43,10 @@ public class UserAuthController : ControllerBase
         user.PasswordSalt = hmac.Key;
 
         var userDTO = await _userRepo.CreateUser(user);
-        userDTO.Token = _tokenRepo.CreateToken(userDTO);
-        if(userDTO != null) return Ok(userDTO);
+        if(userDTO != null) return Ok(new {
+            user = userDTO,
+            token = _tokenRepo.CreateToken(userDTO)
+        });
         else return BadRequest("Something went wrong. Try again.");
     }
 
@@ -55,10 +56,11 @@ public class UserAuthController : ControllerBase
         var user = await _userRepo.LoginUser(loginDTO.Username, loginDTO.Password);
         
         if(user == null) return BadRequest("Invalid password or username");
-        
-        user.Token = _tokenRepo.CreateToken(user);
 
-        return Ok(user);
+        return Ok(new {
+            user = user,
+            token = _tokenRepo.CreateToken(user)
+        });
     }
     #endregion
 }
