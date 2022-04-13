@@ -11,19 +11,17 @@ namespace DartTimeAPI.Controllers;
 public class UserAuthController : BaseApiController
 {
     #region Variables
-    private readonly ILogger<UserAuthController> _logger;
     private readonly IUserRepo _userRepo;
     private readonly IMapper _mapper;
     private readonly ITokenRepo _tokenRepo;
     #endregion
 
     #region Constructor
-    public UserAuthController(ILogger<UserAuthController> logger, IUserRepo userRepo, IMapper mapper, ITokenRepo tokenRepo)
+    public UserAuthController(IUserRepo userRepo, IMapper mapper, ITokenRepo tokenRepo)
     {
         _tokenRepo = tokenRepo;
         _mapper = mapper;
         _userRepo = userRepo;
-        _logger = logger;
     }
     #endregion
 

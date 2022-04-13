@@ -11,7 +11,8 @@ public class User
     public string Country { get; set; }
     public string City { get; set; }
     public string Email { get; set; }
-    public ICollection<Friendship> Friends { get; set; }
+    public ICollection<Friendship> Friends { get; set; } 
+    //friends and friends of are null, fix relation in db
     public ICollection<Friendship> FriendsOf { get; set; }
     public DateTime CreationDate { get; set; } = DateTime.Now;
     public DateTime DateOfBirth { get; set; }

@@ -19,6 +19,7 @@ builder.Services.AddDbContext<DataContext>(options => {
 });
 builder.Services.AddScoped<IUserRepo, UserRepo>();
 builder.Services.AddScoped<ITokenRepo, TokenRepo>();
+builder.Services.AddScoped<IFriendRepo, FriendRepo>();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
 builder.Services.AddCors();
 

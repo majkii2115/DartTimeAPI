@@ -1,3 +1,5 @@
+using DartTimeAPI.Models;
+
 namespace DartTimeAPI.DTOs;
 public class UserDTO
 {
@@ -9,4 +11,6 @@ public class UserDTO
     public string Country { get; set; }
     public string City { get; set; }
     public string Email { get; set; }
+    public ICollection<Friendship> Friends { get; set; }
+    public ICollection<Friendship> FriendsOf { get; set; }
 }
