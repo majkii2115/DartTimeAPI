@@ -43,5 +43,17 @@ public class FriendController : BaseApiController
             return BadRequest("User not found.");
         }
     }
+
+    [HttpGet]
+    public async Task<IActionResult> GetFriends()
+    {
+        var username = User.GetUsername();
+        var user = await _userRepo.GetUserByUsername(username);
+        
+        List<FriendshipDTO> friends = new List<FriendshipDTO>();
+        friends = await _friendRepo.GetFriends(user.Id);
+
+        return Ok(friends);
+    }
     #endregion
 }
