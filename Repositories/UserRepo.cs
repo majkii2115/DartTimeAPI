@@ -65,7 +65,11 @@ public class UserRepo : IUserRepo
     public async Task<UserDTO> GetUserByUsername(string username)
     {
         var user = await _context.Users.FirstOrDefaultAsync(x => x.Username == username);
-        return _mapper.Map<UserDTO>(user);
+        if(user != null)
+        {
+            return _mapper.Map<UserDTO>(user);
+        }
+        return null;
     }
     #endregion
 }

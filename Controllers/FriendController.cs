@@ -31,16 +31,17 @@ public class FriendController : BaseApiController
         var user = await _userRepo.GetUserByUsername(username);
         var friend = await _userRepo.GetUserByUsername(addFriendDTO.Username);
 
-        if(friend != null || !user.Friends.Any(x => x.UserFriendId == friend.Id) || user.Id != friend.Id)
+        if(friend != null)
         {
+            if(friend.Id == user.Id) return BadRequest("Cannot add yourself to friends.");
+            if(await _friendRepo.AreAlreadyFriend(user.Id, friend.Id)) return BadRequest("Users are already friends.");
             await _friendRepo.AddFriend(user.Id, friend.Id);
             return Ok();
         }
         else
         {
-            return BadRequest("Cannot add this friend.");
+            return BadRequest("User not found.");
         }
     }
-
     #endregion
 }

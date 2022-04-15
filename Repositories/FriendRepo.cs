@@ -3,6 +3,7 @@ using DartTimeAPI.Data;
 using DartTimeAPI.DTOs;
 using DartTimeAPI.Models;
 using DartTimeAPI.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace DartTimeAPI.Repositories;
 public class FriendRepo : IFriendRepo
@@ -31,6 +32,11 @@ public class FriendRepo : IFriendRepo
         await _context.Friendships.AddAsync(friendShip);
 
         await _context.SaveChangesAsync();        
+    }
+
+    public async Task<bool> AreAlreadyFriend(int userId, int friendId)
+    {
+        return await _context.Friendships.AnyAsync(x => x.UserId == userId && x.UserFriendId == friendId);
     }
 
     #endregion
