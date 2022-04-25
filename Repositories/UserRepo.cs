@@ -71,5 +71,11 @@ public class UserRepo : IUserRepo
         }
         return null;
     }
+
+    public async Task<UserDTO> GetUserById(int id) 
+    {
+        var usr = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
+        return _mapper.Map<UserDTO>(usr);
+    }
     #endregion
 }

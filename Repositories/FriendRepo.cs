@@ -35,10 +35,7 @@ public class FriendRepo : IFriendRepo
         await _context.SaveChangesAsync();        
     }
 
-    public async Task<bool> AreAlreadyFriend(int userId, int friendId)
-    {
-        return await _context.Friendships.AnyAsync(x => x.UserId == userId && x.UserFriendId == friendId);
-    }
+    public async Task<bool> AreAlreadyFriend(int userId, int friendId) => await _context.Friendships.AnyAsync(x => x.UserId == userId && x.UserFriendId == friendId);
 
     public async Task<List<FriendshipDTO>> GetFriends(int userId)
     {

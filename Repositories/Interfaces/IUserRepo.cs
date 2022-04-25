@@ -7,6 +7,7 @@ public interface IUserRepo
     Task<UserDTO> CreateUser(User user);
     Task<UserDTO> LoginUser(string username, string password);
     Task<UserDTO> GetUserByUsername(string username);
+    Task<UserDTO> GetUserById(int id);
     Task<bool> DoesUserExist(string username);
     Task<bool> SaveChangesAsync();
 }
